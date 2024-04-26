@@ -1,37 +1,47 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        int k = Integer.parseInt(st.nextToken());
-        int[][] arr = new int[n + 1][3]; // 국가번호와 메달 개수를 담을 2차원 배열 선언
-        for (int i = 0; i < n; i++) {
-            st = new StringTokenizer(br.readLine());
-            int index = Integer.parseInt(st.nextToken());
-            int gold = Integer.parseInt(st.nextToken());
-            int silver = Integer.parseInt(st.nextToken());
-            int bronze = Integer.parseInt(st.nextToken());
-            arr[index][0] = gold;
-            arr[index][1] = silver;
-            arr[index][2] = bronze;
-        }
-        int rank = 1; // 1등으로 시작
-        for (int i = 1; i < n; i++) { // 메달 비교해서 등수를 알고 싶은 국가(k) 보다 비교할 국가(i)의 메달이 더 많으면 등수 + 1
-            if (arr[i][0] > arr[k][0]) {
-                rank++;
-            }
-            else if (arr[i][0] == arr[k][0] && arr[i][1] > arr[k][1]) {
-                rank++;
-            }
-            else if (arr[i][0] == arr[k][0] && arr[i][1] == arr[k][1] && arr[i][2] > arr[k][2]) {
-                rank++;
+    public static void main(String[] args){
+        Scanner scan = new Scanner(System.in);
+        int n=scan.nextInt(); //나라 수
+        int k=scan.nextInt(); //알고싶은 나라 번호
+        int result=1;
+        int[][] medals = new int[n][4];
+        long[][] score_medals = new long[n][2];//가중치 점수 부여된 배열
+
+        for(int i=0;i<n;i++) {
+            for(int j=0;j<4;j++){
+            medals[i][j]=scan.nextInt(); //국가들의 메달 정보를 저장
             }
         }
-        System.out.println(rank);
+
+        for(int i=0;i<n;i++) {
+            score_medals[i][0]=medals[i][0]; //국가 번호는 그냥 복붙
+            score_medals[i][1]=(medals[i][1]*1000000000000L)+(medals[i][2]*1000000)+(medals[i][3]*1); //score_medals[국가번호][1]위치에 각 국가의 점수를 저장
+        }
+
+        /*
+        //출력 잘되나 확인
+        for(int i=0;i<n;i++) {
+            for(int j=0;j<2;j++){
+            System.out.print(score_medals[i][j]+", ");
+            }
+            System.out.println("");
+        }
+
+        */    
+
+        for(int i=0;i<n;i++) {
+            if(score_medals[i][0]==k){
+                for(int j=0;j<n;j++){
+                    if(score_medals[i][1]<score_medals[j][1])
+                        result++;
+                }
+                break;
+            }
+        }
+
+        //k나라 순위 알려주기
+            System.out.println(result); 
+        }
     }
-}
